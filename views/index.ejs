@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.5.0.min.js"
+      integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      body {
+        background: #7f00ff; /* fallback for old browsers */
+        background: -webkit-linear-gradient(
+          to right,
+          #e100ff,
+          #7f00ff
+        ); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to right, #e100ff, #7f00ff);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <form id="form1" action="/sendEmail" method="post">
+        <h1><%= title %></h1>
+        <p>Welcome to <%= title %></p>
+        <!-- <div class="card">
+          <div>
+            <input
+              type="text"
+              id="emailId"
+              class="form-control"
+              placeholder="Enter your email id"
+              name="EmailId"
+            />
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              name="Pass"
+              placeholder="Enter your email id password"
+            />
+          </div>
+        </div> -->
+        <br />
+        <div>
+          <h3>Enter Email Id to whom you want to send</h3>
+          <input
+            type="text"
+            class="form-control"
+            id="bulk"
+            placeholder="Enter email "
+          />
+
+          <br />
+          <label> Click on add One By One</label>
+          <input
+            id="add125"
+            type="button"
+            class="btn btn-primary text-center"
+            onclick="add()"
+            value="ADD"
+          />
+        </div>
+        <div class="card">
+          <ol class="justList"></ol>
+        </div>
+        <div id="array125"></div>
+        <br />
+        <div>
+          <h3>Enter Email Subject</h3>
+          <input type="text" class="form-control" id="subject" name="subject" />
+          <h3>Enter Email Message</h3>
+          <textarea id="message" class="form-control" name="message"></textarea>
+        </div>
+        <br />
+        <button id="Save" class="btn btn-primary" type="submit">SEND</button>
+        <h4></h4>
+        <input
+          type="hidden"
+          id="listemail"
+          name="listemail"
+          class="listemail"
+        />
+      </form>
+    </div>
+  </body>
+  <script type="text/javascript">
+    var formData = new FormData();
+    var listOfEmail = new Array();
+
+    function add() {
+      var list = document.getElementById("bulk").value;
+
+      if (list != "") {
+        listOfEmail.push(list);
+
+        $("#listemail").val(listOfEmail);
+
+        //  $("#listOfEmail").prop("value", list);
+      }
+
+      // console.log(FormData);
+    }
+    $("#add125").click(function () {
+      var text = $("#bulk").val();
+
+      if (text.length) {
+        $("<li />", { html: text }).appendTo("ol.justList");
+      }
+      var text = $("#bulk").val("");
+      console.log("LIST OF EMAIL", listOfEmail);
+    });
+
+    document.getElementById("bulk").value = "";
+
+    $(document).ready(function () {
+      $("#Save").submit(function (e) {
+        e.preventDefault();
+        console.log("listOfEmail", listOfEmail);
+
+        // var formData = new FormData(this);
+        // formData.append("listOfEmail", listOfEmail);
+        // email = $(this).serialize();
+        $.ajax({
+          url: "/sendEmail",
+
+          type: "POST",
+
+          dataType: "json",
+
+          data: formData,
+
+          success: function (data, textStatus, xhr) {
+            console.log(data);
+            alert(data);
+
+            $();
+          },
+
+          error: function (xhr, textStatus, errorThrown) {
+            console.log(textStatus);
+          },
+        });
+      });
+    });
+  </script>
+</html>
